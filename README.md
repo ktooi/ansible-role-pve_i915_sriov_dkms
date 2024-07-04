@@ -17,13 +17,13 @@ This Ansible role manages the i915 SR-IOV DKMS module on Proxmox VE, ensuring th
 | `pve_i915_sriov_dkms_force_git_clone` | `true` | Force git clone |
 | `pve_i915_sriov_dkms_force_dkms_install` | `{{ pve_i915_sriov_dkms_force }}` | Force DKMS install |
 | `pve_i915_sriov_dkms_force_download_adlp_dmc` | `{{ pve_i915_sriov_dkms_force }}` | Force download ADLP DMC |
-| `pve_i915_sriov_dkms_assert_kernel_ver` | `{{ pve_i915_sriov_dkms_kern_ver.split('.')[0:2] | join('.') }}` | Kernel version assertion |
+| `pve_i915_sriov_dkms_assert_kernel_ver` | `{{ pve_i915_sriov_dkms_kern_ver.split('.')[0:2] \| join('.') }}` | Kernel version assertion |
 | `pve_i915_sriov_dkms_assert_min_kernel_ver` | `"6.1"` | Minimum kernel version |
 | `pve_i915_sriov_dkms_assert_max_kernel_ver` | `"6.5"` | Maximum kernel version |
 | `pve_i915_sriov_dkms_sysfs_file` | `"/etc/sysfs.d/i915-sriov-dkms.conf"` | Sysfs file path |
 | `pve_i915_sriov_dkms_sysfs_device_sriov_numvfs` | `{{ pve_i915_sriov_dkms_sysfs_device_path }}/sriov_numvfs` | Sysfs device path for SR-IOV VFs |
 | `pve_i915_sriov_dkms_max_vfs` | `"7"` | Maximum VFs |
-| `pve_i915_sriov_dkms_pkg_ver` | `{{ pve_i915_sriov_dkms_kern_ver.split('.')[0:2] | join('.') }}` | Package version |
+| `pve_i915_sriov_dkms_pkg_ver` | `{{ pve_i915_sriov_dkms_kern_ver.split('.')[0:2] \| join('.') }}` | Package version |
 | `pve_i915_sriov_dkms_git_repo` | `"https://github.com/strongtz/i915-sriov-dkms.git"` | Git repository URL |
 | `pve_i915_sriov_dkms_git_version` | `"d2b3b6e374c2f1799fb5bc07aad1f4ed5d058919"` | Git version |
 | `pve_i915_sriov_dkms_dest_dir` | `/usr/src/i915-sriov-dkms-{{ pve_i915_sriov_dkms_pkg_ver }}` | Destination directory |
