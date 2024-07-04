@@ -4,6 +4,7 @@ This Ansible role manages the i915 SR-IOV DKMS module on Proxmox VE, ensuring th
 
 ## Requirements
 
+- Intel Core processor 11th Gen (Tiger Lake only, not including Rocket Lake) through 13th Gen: See also [Graphics Virtualization Technologies Support for Each Intel®...](https://www.intel.com/content/www/us/en/support/articles/000093216/graphics/processor-graphics.html)
 - Ansible version 2.9 or higher
 - Proxmox VE environment
 - Kernel version is between 6.1 and 6.5
