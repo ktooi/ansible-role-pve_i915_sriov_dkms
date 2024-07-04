@@ -1,4 +1,3 @@
-```markdown
 # Ansible Role: pve_i915_sriov_dkms
 
 This Ansible role manages the i915 SR-IOV DKMS module on Proxmox VE, ensuring the proper setup and configuration for enabling Intel GPU virtualization.
@@ -80,6 +79,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Contribution Guidelines
 
 Please open issues or submit pull requests for any bugs or feature requests. Contributions are welcome!
-```
 
 This `README.md` provides a comprehensive overview of the Ansible role, its variables, usage, and other essential information for users.
