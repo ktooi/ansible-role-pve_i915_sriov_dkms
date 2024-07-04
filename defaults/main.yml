@@ -14,7 +14,7 @@ pve_i915_sriov_dkms_assert_min_kernel_ver: "6.1"
 pve_i915_sriov_dkms_assert_max_kernel_ver: "6.5"
 
 # Configure sysfs parameters
-pve_i915_sriov_dkms_sysfs_file: "/etc/sysfs.d/i915-sriov-dkms"
+pve_i915_sriov_dkms_sysfs_file: "/etc/sysfs.d/i915-sriov-dkms.conf"
 # pve_i915_sriov_dkms_sysfs_device_path: "devices/pci0000:00/0000:00:02.0"
 pve_i915_sriov_dkms_sysfs_device_sriov_numvfs: "{{ pve_i915_sriov_dkms_sysfs_device_path }}/sriov_numvfs"
 pve_i915_sriov_dkms_max_vfs: "7"
