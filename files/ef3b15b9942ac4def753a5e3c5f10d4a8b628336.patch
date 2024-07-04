@@ -1,0 +1,46 @@
+From ef3b15b9942ac4def753a5e3c5f10d4a8b628336 Mon Sep 17 00:00:00 2001
+From: michael-pptf <floydhwung@gmail.com>
+Date: Fri, 26 Apr 2024 09:28:32 -0700
+Subject: [PATCH] made modifications to the build files to match what
+ PVE8.1/6.5-13 has. This will load the 0.1.9.0 firmware for GuC correctly. If
+ only the guc_version_abi.h is changed, the version checks in
+ intel_iov_query.h will prevent the build since it can't find a
+ ALTERNATE_MINOR version. I have not taken a good look at the diffs between
+ PVE8.0/6.2-15 (what I upgraded from) so I can't say this change won't break
+ compatibility with older versions/kernels.
+
+---
+ drivers/gpu/drm/i915/gt/iov/intel_iov_query.c    | 3 ++-
+ drivers/gpu/drm/i915/gt/uc/abi/guc_version_abi.h | 6 ++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/gt/iov/intel_iov_query.c b/drivers/gpu/drm/i915/gt/iov/intel_iov_query.c
+index b883636..f27fa99 100644
+--- a/drivers/gpu/drm/i915/gt/iov/intel_iov_query.c
++++ b/drivers/gpu/drm/i915/gt/iov/intel_iov_query.c
+@@ -103,7 +103,8 @@ static int vf_handshake_with_guc(struct intel_iov *iov)
+ 		goto fail;
+ 
+ 	/* XXX we only support one version, there must be a match */
+-	if (major != GUC_VF_VERSION_LATEST_MAJOR || (minor != GUC_VF_VERSION_LATEST_MINOR && minor != GUC_VF_VERSION_ALTERNATE_MINOR))
++        /* This line was changed by PR #126 and the additional checks for the ALTERNATE_MINOR is causing problems in PVE 8.1/6.15-13. I do not know if this will break compatibility with older versions/kernels so use at your own risk. */
++	if (major != GUC_VF_VERSION_LATEST_MAJOR || minor != GUC_VF_VERSION_LATEST_MINOR)
+ 		goto fail;
+ 
+ 	guc_info(iov_to_guc(iov), "interface version %u.%u.%u.%u\n",
+diff --git a/drivers/gpu/drm/i915/gt/uc/abi/guc_version_abi.h b/drivers/gpu/drm/i915/gt/uc/abi/guc_version_abi.h
+index 7bb56ac..bfc2eaf 100644
+--- a/drivers/gpu/drm/i915/gt/uc/abi/guc_version_abi.h
++++ b/drivers/gpu/drm/i915/gt/uc/abi/guc_version_abi.h
+@@ -7,7 +7,9 @@
+ #define _ABI_GUC_VERSION_ABI_H
+ 
+ #define GUC_VF_VERSION_LATEST_MAJOR	1
+-#define GUC_VF_VERSION_LATEST_MINOR	0
+-#define GUC_VF_VERSION_ALTERNATE_MINOR	4
++
++/* NOTE: This MINOR version is what can be loaded in PVE8.1/6.15-13. Use at your own risk. */
++#define GUC_VF_VERSION_LATEST_MINOR	9
++
+ 
+ #endif /* _ABI_GUC_VERSION_ABI_H */

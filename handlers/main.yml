@@ -1,0 +1,17 @@
+---
+- name: update-grub
+  ansible.builtin.command: "update-grub"
+  become: true
+
+- name: update-initramfs
+  ansible.builtin.command:
+    argv:
+      - "update-initramfs"
+      - "-u"
+      - "-k"
+      - "all"
+  become: true
+
+- name: reboot
+  ansible.builtin.reboot:
+  become: true

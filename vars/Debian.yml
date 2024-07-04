@@ -1,0 +1,12 @@
+---
+__pve_i915_sriov_dkms_header_pkg: "pve-headers-{{ pve_i915_sriov_dkms_kern_ver }}"
+__pve_i915_sriov_dkms_pkgs:
+  - git
+  - sysfsutils
+  - dkms
+  - build-essential
+  - unzip
+__pve_i915_sriov_dkms_non_free_pkgs:
+  - intel-media-va-driver-non-free
+  - intel-gpu-tools
+  - vainfo
