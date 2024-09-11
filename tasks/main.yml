@@ -158,18 +158,41 @@
   become: true
   when: pve_i915_sriov_dkms_patches is defined and pve_i915_sriov_dkms_patches
 
+- name: check the custom driver is already installed
+  ansible.builtin.command:
+    argv:
+      - dkms
+      - status
+      - -m
+      - i915-sriov-dkms
+      - -k
+      - "{{ pve_i915_sriov_dkms_kern_ver }}"
+  register: __dkms_status
+  changed_when: false
+  failed_when: false
+  become: true
+
+- name: check the custom driver is already installed
+  set_fact:
+    __driver_installed: "{{ __dkms_status.stdout | regex_search('installed$') != None }}"
+# $ dkms status
+# i915-sriov-dkms/6.5, 6.5.13-5-pve, x86_64: installed
+# i915-sriov-dkms/6.8, 6.5.13-6-pve, x86_64: installed (WARNING! Diff between built and installed module!)
+
+
 - name: install the custom driver
   ansible.builtin.command:
     argv:
       - dkms
       - install
-      - '{{ "--force" if pve_i915_sriov_dkms_force_dkms_install else omit }}'
+      - --force
       - -m
       - i915-sriov-dkms
       - -v
       - "{{ pve_i915_sriov_dkms_pkg_ver }}"
   register: __dkms_result
   changed_when: "'already installed' not in __dkms_result.stdout"
+  when: not __driver_installed or pve_i915_sriov_dkms_force_dkms_install
   become: true
 
 # Configure the grub タスクで \g<blank> を半角スペースとして展開できるように、必要があれば無害な半角スペースを追加するタスク。
