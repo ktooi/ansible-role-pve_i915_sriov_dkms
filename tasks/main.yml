@@ -1,6 +1,8 @@
 ---
+# 変数の初期値を定義する。
 - include_tasks: variables.yml
 
+# Kernel version check
 - name: Assert kernel version
   ansible.builtin.assert:
     that:

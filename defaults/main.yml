@@ -11,7 +11,7 @@ pve_i915_sriov_dkms_force_download_adlp_dmc: "{{ pve_i915_sriov_dkms_force }}"
 # Assert Kernel Version
 pve_i915_sriov_dkms_assert_kernel_ver: "{{ pve_i915_sriov_dkms_kern_ver.split('.')[0:2] | join('.') }}"
 pve_i915_sriov_dkms_assert_min_kernel_ver: "6.1"
-pve_i915_sriov_dkms_assert_max_kernel_ver: "6.5"
+pve_i915_sriov_dkms_assert_max_kernel_ver: "6.9"
 
 # Configure sysfs parameters
 pve_i915_sriov_dkms_sysfs_file: "/etc/sysfs.d/i915-sriov-dkms.conf"
@@ -22,17 +22,18 @@ pve_i915_sriov_dkms_max_vfs: "7"
 # Configure dkms and i915-sriov-dkms parameters
 pve_i915_sriov_dkms_pkg_ver: "{{ pve_i915_sriov_dkms_kern_ver.split('.')[0:2] | join('.') }}"
 pve_i915_sriov_dkms_git_repo: "https://github.com/strongtz/i915-sriov-dkms.git"
-# Workaround: https://github.com/strongtz/i915-sriov-dkms/issues/174
-# pve_i915_sriov_dkms_git_version: "HEAD"
-pve_i915_sriov_dkms_git_version: "d2b3b6e374c2f1799fb5bc07aad1f4ed5d058919"
+## Workaround: https://github.com/strongtz/i915-sriov-dkms/issues/174
+## pve_i915_sriov_dkms_git_version: "HEAD"
+#pve_i915_sriov_dkms_git_version: "d2b3b6e374c2f1799fb5bc07aad1f4ed5d058919"
+pve_i915_sriov_dkms_git_version: "94c61cc345f7e145b6f1ff336846ccc0ae807b86"
 pve_i915_sriov_dkms_dest_dir: "/usr/src/i915-sriov-dkms-{{ pve_i915_sriov_dkms_pkg_ver }}"
 pve_i915_sriov_dkms_conf_file: "{{ pve_i915_sriov_dkms_dest_dir }}/dkms.conf"
 # dkms patches
 pve_i915_sriov_dkms_patch_dir: "{{ pve_i915_sriov_dkms_dest_dir }}/patches"
-pve_i915_sriov_dkms_patches:
-  - description: "https://github.com/strongtz/i915-sriov-dkms/pull/159"
-    file: ef3b15b9942ac4def753a5e3c5f10d4a8b628336.patch
-    match: '6\.5\.((\d{3,}|[2-9]\d|1[4-9])-\d+|13-(\d{2,}|[5-9]))-pve'
+#pve_i915_sriov_dkms_patches:
+#  - description: "https://github.com/strongtz/i915-sriov-dkms/pull/159"
+#    file: ef3b15b9942ac4def753a5e3c5f10d4a8b628336.patch
+#    match: '6\.5\.((\d{3,}|[2-9]\d|1[4-9])-\d+|13-(\d{2,}|[5-9]))-pve'
 
 # apt repository parameters
 pve_i915_sriov_dkms_repo_non_free_firmware_url: "http://deb.debian.org/debian"
