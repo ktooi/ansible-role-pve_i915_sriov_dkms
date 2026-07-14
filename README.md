@@ -24,6 +24,13 @@ This Ansible role manages the i915 SR-IOV DKMS module on Proxmox VE, ensuring th
 | `pve_i915_sriov_dkms_sysfs_file` | `"/etc/sysfs.d/i915-sriov-dkms.conf"` | Sysfs file path |
 | `pve_i915_sriov_dkms_sysfs_device_sriov_numvfs` | `{{ pve_i915_sriov_dkms_sysfs_device_path }}/sriov_numvfs` | Sysfs device path for SR-IOV VFs |
 | `pve_i915_sriov_dkms_max_vfs` | `"7"` | Maximum VFs |
+| `pve_i915_sriov_dkms_block_vfs` | `false` | Bind i915 VFs to `vfio-pci` on the host so only guests use them |
+| `pve_i915_sriov_dkms_vfio_modules_load_file` | `"/etc/modules-load.d/vfio.conf"` | vfio-pci module-load configuration path |
+| `pve_i915_sriov_dkms_vfio_udev_rules_file` | `"/etc/udev/rules.d/99-i915-vf-vfio.rules"` | udev rule path for binding i915 VFs to `vfio-pci` |
+| `pve_i915_sriov_dkms_vf_vendor_id` | `"0x8086"` | PCI vendor ID matched by the VF udev rule |
+| `pve_i915_sriov_dkms_vf_device_id` | detected from PF sysfs `device` | PCI device ID matched by the VF udev rule |
+| `pve_i915_sriov_dkms_pf_pci_addr` | `{{ pve_i915_sriov_dkms_sysfs_device_path | basename }}` | iGPU Physical Function PCI address |
+| `pve_i915_sriov_dkms_vf_pci_kernel_pattern` | derived from PF PCI address and `pve_i915_sriov_dkms_max_vfs` | udev `KERNEL` pattern for i915 VFs |
 | `pve_i915_sriov_dkms_pkg_ver` | `"2026.05.06"` | Package version |
 | `pve_i915_sriov_dkms_git_repo` | `"https://github.com/strongtz/i915-sriov-dkms.git"` | Git repository URL |
 | `pve_i915_sriov_dkms_git_version` | `"b79661e"` | Git version |
@@ -63,6 +70,17 @@ ansible-galaxy install ktooi.pve_i915_sriov_dkms
 ## Usage
 
 Ensure that you have met all requirements and then include this role in your playbook as shown in the example. Customize variables as needed.
+
+
+### Optional: Block VFs on the host
+
+The upstream i915-sriov-dkms documentation recommends binding VFs to `vfio-pci` when the host should not use them directly. This can improve host stability and avoids host media or monitoring tools accidentally using VFs intended for guests. Enable this role feature with:
+
+```yaml
+pve_i915_sriov_dkms_block_vfs: true
+```
+
+When enabled, the role loads `vfio-pci`, creates a udev rule for the i915 VF PCI functions, regenerates initramfs, and reboots via the existing handlers.
 
 ## Authors
 

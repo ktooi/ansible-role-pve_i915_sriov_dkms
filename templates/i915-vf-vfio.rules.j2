@@ -1,0 +1,2 @@
+# Bind all i915 VFs for {{ pve_i915_sriov_dkms_pf_pci_addr }} to vfio-pci.
+ACTION=="add", SUBSYSTEM=="pci", KERNEL=="{{ pve_i915_sriov_dkms_vf_pci_kernel_pattern }}", ATTR{vendor}=="{{ pve_i915_sriov_dkms_vf_vendor_id }}", ATTR{device}=="{{ pve_i915_sriov_dkms_vf_device_id }}", DRIVER!="vfio-pci", RUN+="/bin/sh -c 'echo $kernel > /sys/bus/pci/devices/$kernel/driver/unbind; echo vfio-pci > /sys/bus/pci/devices/$kernel/driver_override; modprobe vfio-pci; echo $kernel > /sys/bus/pci/drivers/vfio-pci/bind'"

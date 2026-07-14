@@ -19,6 +19,15 @@ pve_i915_sriov_dkms_sysfs_file: "/etc/sysfs.d/i915-sriov-dkms.conf"
 pve_i915_sriov_dkms_sysfs_device_sriov_numvfs: "{{ pve_i915_sriov_dkms_sysfs_device_path }}/sriov_numvfs"
 pve_i915_sriov_dkms_max_vfs: "7"
 
+# Optional host-side VF blocking. See upstream docs/block-vfs.md.
+pve_i915_sriov_dkms_block_vfs: false
+pve_i915_sriov_dkms_vfio_modules_load_file: "/etc/modules-load.d/vfio.conf"
+pve_i915_sriov_dkms_vfio_udev_rules_file: "/etc/udev/rules.d/99-i915-vf-vfio.rules"
+pve_i915_sriov_dkms_vf_vendor_id: "0x8086"
+pve_i915_sriov_dkms_vf_device_id: "{{ __pve_i915_sriov_dkms_vf_device_id.content | b64decode | trim }}"
+pve_i915_sriov_dkms_pf_pci_addr: "{{ pve_i915_sriov_dkms_sysfs_device_path | basename }}"
+pve_i915_sriov_dkms_vf_pci_kernel_pattern: "{{ pve_i915_sriov_dkms_pf_pci_addr | regex_replace('\\.0$', '.[1-' ~ pve_i915_sriov_dkms_max_vfs ~ ']') }}"
+
 # Configure dkms and i915-sriov-dkms parameters
 pve_i915_sriov_dkms_pkg_ver: "2026.05.06"
 pve_i915_sriov_dkms_git_repo: "https://github.com/strongtz/i915-sriov-dkms.git"

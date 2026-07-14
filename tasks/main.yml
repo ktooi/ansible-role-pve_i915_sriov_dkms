@@ -1,6 +1,7 @@
 ---
 # 変数の初期値を定義する。
-- ansible.builtin.include_tasks: variables.yml
+- name: Include role variables
+  ansible.builtin.include_tasks: variables.yml
 
 # Kernel version check
 - name: Assert kernel version
@@ -30,6 +31,39 @@
   ansible.builtin.set_fact:
     pve_i915_sriov_dkms_sysfs_device_path: "{{ __i915_device_link_stat.stat.lnk_source | regex_replace('^/sys/', '') }}"
   when: pve_i915_sriov_dkms_sysfs_device_path is not defined
+
+- name: Read i915 VF device ID for host-side VF blocking
+  ansible.builtin.slurp:
+    src: "/sys/{{ pve_i915_sriov_dkms_sysfs_device_path }}/device"
+  register: __pve_i915_sriov_dkms_vf_device_id
+  when: pve_i915_sriov_dkms_block_vfs
+
+- name: Ensure vfio-pci loads for host-side VF blocking
+  ansible.builtin.lineinfile:
+    path: "{{ pve_i915_sriov_dkms_vfio_modules_load_file }}"
+    line: vfio-pci
+    create: true
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - update-initramfs
+    - reboot
+  become: true
+  when: pve_i915_sriov_dkms_block_vfs
+
+- name: Configure udev to bind i915 VFs to vfio-pci
+  ansible.builtin.template:
+    src: i915-vf-vfio.rules.j2
+    dest: "{{ pve_i915_sriov_dkms_vfio_udev_rules_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - update-initramfs
+    - reboot
+  become: true
+  when: pve_i915_sriov_dkms_block_vfs
 
 - name: Install kernel headers
   ansible.builtin.apt:
