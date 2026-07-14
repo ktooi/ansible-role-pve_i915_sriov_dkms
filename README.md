@@ -74,13 +74,13 @@ Ensure that you have met all requirements and then include this role in your pla
 
 ### Optional: Block VFs on the host
 
-The upstream i915-sriov-dkms documentation recommends binding VFs to `vfio-pci` when the host should not use them directly. This can improve host stability and avoids host media or monitoring tools accidentally using VFs intended for guests. Enable this role feature with:
+The upstream i915-sriov-dkms PVE host guide treats this as an optional configuration, but highly recommends binding VFs to `vfio-pci` for host stability and performance because VFs are intended for guest virtual machines rather than host use. This role keeps the feature disabled by default for backward compatibility and to avoid changing PCI driver binding unexpectedly during an upgrade. For typical VM/LXC passthrough hosts, enable it explicitly with:
 
 ```yaml
 pve_i915_sriov_dkms_block_vfs: true
 ```
 
-When enabled, the role loads `vfio-pci`, creates a udev rule for the i915 VF PCI functions, regenerates initramfs, and reboots via the existing handlers.
+When enabled, the role loads `vfio-pci`, creates a udev rule for the i915 VF PCI functions, regenerates initramfs, and reboots via the existing handlers. Leave it disabled only if you intentionally manage VF binding elsewhere or need the host to see the VFs for troubleshooting or validation.
 
 ## Authors
 
