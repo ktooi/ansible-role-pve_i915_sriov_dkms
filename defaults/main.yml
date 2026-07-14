@@ -10,8 +10,8 @@ pve_i915_sriov_dkms_force_download_adlp_dmc: "{{ pve_i915_sriov_dkms_force }}"
 
 # Assert Kernel Version
 pve_i915_sriov_dkms_assert_kernel_ver: "{{ pve_i915_sriov_dkms_kern_ver.split('.')[0:2] | join('.') }}"
-pve_i915_sriov_dkms_assert_min_kernel_ver: "6.1"
-pve_i915_sriov_dkms_assert_max_kernel_ver: "6.9"
+pve_i915_sriov_dkms_assert_min_kernel_ver: "6.17"
+pve_i915_sriov_dkms_assert_max_kernel_ver: "7.0"
 
 # Configure sysfs parameters
 pve_i915_sriov_dkms_sysfs_file: "/etc/sysfs.d/i915-sriov-dkms.conf"
@@ -19,13 +19,22 @@ pve_i915_sriov_dkms_sysfs_file: "/etc/sysfs.d/i915-sriov-dkms.conf"
 pve_i915_sriov_dkms_sysfs_device_sriov_numvfs: "{{ pve_i915_sriov_dkms_sysfs_device_path }}/sriov_numvfs"
 pve_i915_sriov_dkms_max_vfs: "7"
 
+# Optional host-side VF blocking. Upstream highly recommends this for VM/LXC passthrough hosts; default false preserves backward compatibility.
+pve_i915_sriov_dkms_block_vfs: false
+pve_i915_sriov_dkms_vfio_modules_load_file: "/etc/modules-load.d/vfio.conf"
+pve_i915_sriov_dkms_vfio_udev_rules_file: "/etc/udev/rules.d/99-i915-vf-vfio.rules"
+pve_i915_sriov_dkms_vf_vendor_id: "0x8086"
+pve_i915_sriov_dkms_vf_device_id: "{{ __pve_i915_sriov_dkms_vf_device_id.content | b64decode | trim }}"
+pve_i915_sriov_dkms_pf_pci_addr: "{{ pve_i915_sriov_dkms_sysfs_device_path | basename }}"
+pve_i915_sriov_dkms_vf_pci_kernel_pattern: "{{ pve_i915_sriov_dkms_pf_pci_addr | regex_replace('\\.0$', '.[1-' ~ pve_i915_sriov_dkms_max_vfs ~ ']') }}"
+
 # Configure dkms and i915-sriov-dkms parameters
-pve_i915_sriov_dkms_pkg_ver: "{{ pve_i915_sriov_dkms_kern_ver.split('.')[0:2] | join('.') }}"
+pve_i915_sriov_dkms_pkg_ver: "2026.05.06"
 pve_i915_sriov_dkms_git_repo: "https://github.com/strongtz/i915-sriov-dkms.git"
 ## Workaround: https://github.com/strongtz/i915-sriov-dkms/issues/174
 ## pve_i915_sriov_dkms_git_version: "HEAD"
 #pve_i915_sriov_dkms_git_version: "d2b3b6e374c2f1799fb5bc07aad1f4ed5d058919"
-pve_i915_sriov_dkms_git_version: "94c61cc345f7e145b6f1ff336846ccc0ae807b86"
+pve_i915_sriov_dkms_git_version: "b79661e"
 pve_i915_sriov_dkms_dest_dir: "/usr/src/i915-sriov-dkms-{{ pve_i915_sriov_dkms_pkg_ver }}"
 pve_i915_sriov_dkms_conf_file: "{{ pve_i915_sriov_dkms_dest_dir }}/dkms.conf"
 # dkms patches
@@ -57,3 +66,5 @@ pve_i915_sriov_dkms_grub_params:
     value: "3"
   - name: i915.max_vfs
     value: "7"
+  - name: module_blacklist
+    value: "xe"

@@ -1,0 +1,7 @@
+---
+skip_list:
+  # Existing role style keeps lower-case task/handler names and long regex/assert expressions.
+  - name[casing]
+  - yaml[line-length]
+  - yaml[comments]
+  - no-changed-when
