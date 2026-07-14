@@ -7,7 +7,7 @@ This Ansible role manages the i915 SR-IOV DKMS module on Proxmox VE, ensuring th
 - Intel Core processor 11th Gen (Tiger Lake only, not including Rocket Lake) through 13th Gen: See also [Graphics Virtualization Technologies Support for Each Intel®...](https://www.intel.com/content/www/us/en/support/articles/000093216/graphics/processor-graphics.html)
 - Ansible version 2.9 or higher
 - Proxmox VE environment
-- Kernel version is between 6.1 and 6.5
+- Kernel version is between 6.17 and 7.0 for the latest i915-sriov-dkms release. For older kernels, use an older upstream release or branch as documented by strongtz/i915-sriov-dkms.
 
 ## Role Variables
 
@@ -19,14 +19,14 @@ This Ansible role manages the i915 SR-IOV DKMS module on Proxmox VE, ensuring th
 | `pve_i915_sriov_dkms_force_dkms_install` | `{{ pve_i915_sriov_dkms_force }}` | Force DKMS install |
 | `pve_i915_sriov_dkms_force_download_adlp_dmc` | `{{ pve_i915_sriov_dkms_force }}` | Force download ADLP DMC |
 | `pve_i915_sriov_dkms_assert_kernel_ver` | `{{ pve_i915_sriov_dkms_kern_ver.split('.')[0:2] \| join('.') }}` | Kernel version assertion |
-| `pve_i915_sriov_dkms_assert_min_kernel_ver` | `"6.1"` | Minimum kernel version |
-| `pve_i915_sriov_dkms_assert_max_kernel_ver` | `"6.5"` | Maximum kernel version |
+| `pve_i915_sriov_dkms_assert_min_kernel_ver` | `"6.17"` | Minimum kernel version |
+| `pve_i915_sriov_dkms_assert_max_kernel_ver` | `"7.0"` | Maximum kernel version |
 | `pve_i915_sriov_dkms_sysfs_file` | `"/etc/sysfs.d/i915-sriov-dkms.conf"` | Sysfs file path |
 | `pve_i915_sriov_dkms_sysfs_device_sriov_numvfs` | `{{ pve_i915_sriov_dkms_sysfs_device_path }}/sriov_numvfs` | Sysfs device path for SR-IOV VFs |
 | `pve_i915_sriov_dkms_max_vfs` | `"7"` | Maximum VFs |
-| `pve_i915_sriov_dkms_pkg_ver` | `{{ pve_i915_sriov_dkms_kern_ver.split('.')[0:2] \| join('.') }}` | Package version |
+| `pve_i915_sriov_dkms_pkg_ver` | `"2026.05.06"` | Package version |
 | `pve_i915_sriov_dkms_git_repo` | `"https://github.com/strongtz/i915-sriov-dkms.git"` | Git repository URL |
-| `pve_i915_sriov_dkms_git_version` | `"d2b3b6e374c2f1799fb5bc07aad1f4ed5d058919"` | Git version |
+| `pve_i915_sriov_dkms_git_version` | `"b79661e"` | Git version |
 | `pve_i915_sriov_dkms_dest_dir` | `/usr/src/i915-sriov-dkms-{{ pve_i915_sriov_dkms_pkg_ver }}` | Destination directory |
 | `pve_i915_sriov_dkms_conf_file` | `{{ pve_i915_sriov_dkms_dest_dir }}/dkms.conf` | Configuration file path |
 | `pve_i915_sriov_dkms_patch_dir` | `{{ pve_i915_sriov_dkms_dest_dir }}/patches` | Patch directory |
@@ -38,7 +38,7 @@ This Ansible role manages the i915 SR-IOV DKMS module on Proxmox VE, ensuring th
 | `pve_i915_sriov_dkms_adlp_dmc_url` | `"https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/i915/adlp_dmc.bin"` | ADLP DMC URL |
 | `pve_i915_sriov_dkms_adlp_dmc_dest` | `"/lib/firmware/i915/adlp_dmc.bin"` | ADLP DMC destination |
 | `pve_i915_sriov_dkms_grub_config` | `"/etc/default/grub"` | Grub configuration file path |
-| `pve_i915_sriov_dkms_grub_params` | list of parameters | Grub parameters |
+| `pve_i915_sriov_dkms_grub_params` | list of parameters including `intel_iommu=on`, `iommu=pt`, `i915.enable_guc=3`, `i915.max_vfs=7`, and `module_blacklist=xe` | Grub parameters |
 
 ## Dependencies
 

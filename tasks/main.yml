@@ -1,6 +1,6 @@
 ---
 # 変数の初期値を定義する。
-- include_tasks: variables.yml
+- ansible.builtin.include_tasks: variables.yml
 
 # Kernel version check
 - name: Assert kernel version
@@ -175,7 +175,7 @@
   become: true
 
 - name: check the custom driver is already installed
-  set_fact:
+  ansible.builtin.set_fact:
     __driver_installed: "{{ __dkms_status.stdout | regex_search('installed$') != None }}"
 # $ dkms status
 # i915-sriov-dkms/6.5, 6.5.13-5-pve, x86_64: installed
